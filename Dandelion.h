@@ -11,7 +11,6 @@ public:
 
     // Odziedziczono za poœrednictwem elementu Plant
     virtual std::string toString() override;
-    virtual std::string toJSON() override;
     virtual void action() override;
     virtual void collision(Organism&) override;
     virtual void draw() override;

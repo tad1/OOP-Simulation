@@ -1,4 +1,4 @@
-#include "World.h"
+﻿#include "World.h"
 #include "AnimalFactory.h"
 #include <fstream>
 #include <sstream>
@@ -63,7 +63,23 @@ void World::drawWorld()
     GridVector currentPos(0, 0);
     std::weak_ptr<Organism> current;
 
+    //Defining Extended ASCII characters
+    //               ║            ╗                   ╝
+    unsigned char vertical = 186, upperRight = 187, bottomRight = 188;
+
+    //              ═                   ╔               ╚
+    unsigned char horizontal = 205, upperLeft = 201, bottomLeft = 200;
+    
+
+    printf("%c",upperLeft);
+    for (int i = 0; i < mapSize.x; i++) {
+        printf("%c",horizontal);
+    }
+    printf("%c\n",upperRight);
+
+
     for (; currentPos.y < mapSize.y; currentPos.y++) {
+        std::cout << vertical;
         for (; currentPos.x < mapSize.x; currentPos.x++) {
             current = map[getIndexFromPosition(currentPos)];
             if (!current.expired()) {
@@ -72,12 +88,20 @@ void World::drawWorld()
                 organism->draw();
             }
             else {
-                std::cout << ".";
+                std::cout << " ";
             }
         }
+        printf("%c",vertical);
         currentPos.x = 0;
         std::cout << "\n";
     }
+
+    printf("%c",bottomLeft);
+    for (int i = 0; i < mapSize.x; i++) {
+        printf("%c",horizontal);
+    }
+    printf("%c\n",bottomRight);
+
 }
 
 void World::updateWorld()
@@ -171,7 +195,7 @@ std::weak_ptr<Organism> World::getFromMap(GridVector pos)
     return map[getIndexFromPosition(pos)];
 }
 
-void World::saveWorldStateToFile(std::ofstream& file, AnimalFactory factory)
+void World::saveWorldStateToFile(std::ofstream& file, OrganismFactory factory)
 {
     //write size
     file << mapSize.x << " " << mapSize.y << std::endl;
@@ -189,7 +213,7 @@ void World::saveWorldStateToFile(std::ofstream& file, AnimalFactory factory)
     }
 }
 
-void World::loadWorldStateFromFile(std::ifstream & file, AnimalFactory animalFactory)
+void World::loadWorldStateFromFile(std::ifstream & file, OrganismFactory animalFactory)
 {
     GridVector newSize;
     //get size
@@ -205,17 +229,23 @@ void World::loadWorldStateFromFile(std::ifstream & file, AnimalFactory animalFac
     GridVector pos;
     Organism* organism;
 
+    //Allows to store current position of file
+    std::streampos readPos = file.tellg();
+
     while (std::getline(file, line)) {
-        std::stringstream lstream(line);
-        lstream >> type;
-        lstream >> pos.x;
-        lstream >> pos.y;
+        file >> type;
+        file >> pos.x;
+        file >> pos.y;
 
         organism = animalFactory.createOrganism(type, pos);
         if (organism) {
-            organism->readFromFile(line);
+            file.seekg(readPos);
+            organism->readFromFile(file);
             addOrganism(organism);
         }
+
+        readPos = file.tellg();
+
     }
 
         

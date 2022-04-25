@@ -90,10 +90,10 @@
     <ClCompile Include="Simulation.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="IncludeAllOrganisms.cpp">
+    <ClCompile Include="AnimalFactory.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="AnimalFactory.cpp">
+    <ClCompile Include="HumanSkillFactory.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
@@ -117,9 +117,6 @@
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="Random.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="Sheep.h">
@@ -158,9 +155,6 @@
     <ClInclude Include="HumanSkill.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="AlzureShieldSkill.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
     <ClInclude Include="Simulation.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
@@ -170,10 +164,20 @@
     <ClInclude Include="AnimalFactory.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="OOP-Simulation.rc">
-      <Filter>Pliki zasobów</Filter>
-    </ResourceCompile>
+    <ClInclude Include="Input.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="ISaveable.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="HumanSkillFactory.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadExeption.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
+    <ClInclude Include="AlzureShieldSkill.h">
+      <Filter>Pliki nagłówkowe\Skills</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 
 class Human;
 
-class HumanSkill : public Object
+class HumanSkill : public Object, public ISaveable
 {
 protected:
 	bool active;
@@ -12,9 +12,6 @@ protected:
 	int cooldownTime;
 	int cooldownDuration;
 	Human& character;
-
-private:
-	void moveAnimal(Organism&, GridVector);
 
 public:
 
@@ -41,5 +38,8 @@ public:
 
 	// Odziedziczono za poœrednictwem elementu Object
 	virtual std::string toString() override;
-	virtual std::string toJSON() override;
+
+	// Odziedziczono za poœrednictwem elementu ISaveable
+	virtual void writeToFile(std::ofstream&) override;
+	virtual void readFromFile(std::ifstream&) override;
 };

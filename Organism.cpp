@@ -9,9 +9,8 @@ void Organism::setPosition(GridVector newPosition)
 }
 
 Organism::Organism(World& wrld, GridVector pos) : Organism(wrld, pos, 0 ,0)
-{
+{}
 
-}
 
 Organism::Organism(World& wrld, GridVector pos, int init, int str) :world(wrld)
 {
@@ -38,20 +37,16 @@ void Organism::writeToFile(std::ofstream& file)
 	file << strength << " " << initiative;
 }
 
-void Organism::readFromFile(std::string& info)
+void Organism::readFromFile(std::ifstream& file)
 {
-	bool isNotCorrupted = true;
-	std::stringstream lstream(info);
 	GridVector setPosition;
 	int type;
 
-
-	isNotCorrupted = isNotCorrupted && (lstream >> type);
-	isNotCorrupted = isNotCorrupted && (lstream >> setPosition.x);
-	isNotCorrupted = isNotCorrupted && (lstream >> setPosition.y);
-	isNotCorrupted = isNotCorrupted && (lstream >> strength);
-	isNotCorrupted = isNotCorrupted && (lstream >> initiative);
+	file >> type;
+	file >> setPosition.x;
+	file >> setPosition.y;
+	file >> strength;
+	file >> initiative;
 
 	position = setPosition;
-
 }

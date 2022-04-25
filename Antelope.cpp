@@ -5,11 +5,6 @@ std::string Antelope::toString()
     return std::string();
 }
 
-std::string Antelope::toJSON()
-{
-    return std::string();
-}
-
 void Antelope::action()
 {
     std::vector<GridVector> avalibleMoves;

@@ -7,9 +7,11 @@ void AlzureShieldSkill::handleCollision(Organism& other)
         std::vector<GridVector> avalibleSpots;
         character.world.getFreeNeighbourFields(character.position,avalibleSpots);
 
-
         Animal* animal = dynamic_cast<Animal*>(&other);
         animal->stune();
+
+        //if human is stuned, then he won't attact animal
+        character.stune();
 
         printf("%s used %s against %s\n",
             character.getName().c_str(),
@@ -20,11 +22,8 @@ void AlzureShieldSkill::handleCollision(Organism& other)
         int selectedMove = Random::number(avalibleSpots.size());
 
         character.moveAnimal(*animal, avalibleSpots[selectedMove]);
-        
-        
     }
 }
-
 
 Object* AlzureShieldSkill::clone()
 {

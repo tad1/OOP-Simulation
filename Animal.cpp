@@ -89,7 +89,7 @@ void Animal::action(GridVector newPos)
 
 void Animal::collision(Organism& other)
 {
-    if (this->compare(&other)) {
+    if (compare(&other)) {
         breed(*dynamic_cast<Animal*>(&other));
     }
     else {
@@ -110,7 +110,8 @@ void Animal::breed(Animal& other)
     GridVector newPos = possibleDirections[selectedMove];
     
     Animal* child = clone();
-    //because private is only in context per object in c++, this is legal
+
+    //because private is in contetx of class, not object in c++, this is legal
     child->setPosition(newPos);
     child->strength = (strength + other.strength) / 2;
     child->initiative = (initiative + other.initiative) / 2;

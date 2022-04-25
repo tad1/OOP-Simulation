@@ -5,11 +5,6 @@ std::string Dandelion::toString()
     return std::string();
 }
 
-std::string Dandelion::toJSON()
-{
-    return std::string();
-}
-
 void Dandelion::action()
 {
     for (int i = 0; i < numberOfSpreadChances; i++) {
@@ -23,7 +18,7 @@ void Dandelion::collision(Organism&)
 
 void Dandelion::draw()
 {
-    printf("!");
+    printf("*");
 }
 
 Plant* Dandelion::clone()

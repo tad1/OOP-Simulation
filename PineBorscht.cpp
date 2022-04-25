@@ -5,11 +5,6 @@ std::string PineBorscht::toString()
 	return std::string();
 }
 
-std::string PineBorscht::toJSON()
-{
-	return std::string();
-}
-
 void PineBorscht::collision(Organism& organism)
 {
     if (dynamic_cast<Animal*>(&organism)) {

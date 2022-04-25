@@ -10,7 +10,6 @@ public:
 
     // Odziedziczono za poœrednictwem elementu Animal
     virtual std::string toString() override;
-    virtual std::string toJSON() override;
     virtual void draw() override;
     virtual Animal* clone() override;
 };

@@ -10,29 +10,25 @@
 
 class Simulation
 {
-	struct WorldMeta{
+public:
+	struct WorldMeta {
 		std::string name;
 		unsigned int seed;
 	};
 
-
-	World world;
-	WorldMeta worldInfo;
-	AnimalFactory animalFactory;
-
-private:
+protected:
 
 	enum GUIState
 	{
 		MAIN = 0, LOAD, NEW, EXIT, PLAY
 	} currentState;
 
+	World world;
+	WorldMeta worldInfo;
+	OrganismFactory animalFactory;
 
-
-private:
 	bool readSaveInfo(std::vector<WorldMeta>& saveInfo);
 	void writeSaveInfo(std::vector<WorldMeta>& saveInfo);
-	bool readWorld();
 	void readWorld(std::string path);
 	void writeWorldSave();
 	void drawInfo();
@@ -43,10 +39,10 @@ private:
 	void drawSelectSaved(std::vector<WorldMeta>& worldInfo);
 
 public:
+
 	Simulation() :animalFactory(world) {
 		currentState = MAIN;
 	};
-
 
 	void showGUI();
 	void play();

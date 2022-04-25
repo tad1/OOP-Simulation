@@ -149,7 +149,7 @@
     <ClCompile Include="Guarana.cpp" />
     <ClCompile Include="Human.cpp" />
     <ClCompile Include="HumanSkill.cpp" />
-    <ClCompile Include="IncludeAllOrganisms.cpp" />
+    <ClCompile Include="HumanSkillFactory.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OOP-Simulation.cpp" />
     <ClCompile Include="Organism.cpp" />
@@ -173,23 +173,23 @@
     <ClInclude Include="Guarana.h" />
     <ClInclude Include="Human.h" />
     <ClInclude Include="HumanSkill.h" />
+    <ClInclude Include="HumanSkillFactory.h" />
     <ClInclude Include="IncludeAllOrganisms.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="ISaveable.h" />
+    <ClInclude Include="LoadExeption.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Organism.h" />
     <ClInclude Include="PineBorscht.h" />
     <ClInclude Include="Sheep.h" />
     <ClInclude Include="Plant.h" />
     <ClInclude Include="Random.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="Turtle.h" />
     <ClInclude Include="Vector2D.h" />
     <ClInclude Include="Wolf.h" />
     <ClInclude Include="Wolfberries.h" />
     <ClInclude Include="World.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="OOP-Simulation.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

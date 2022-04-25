@@ -8,7 +8,7 @@
 #include <deque>
 #include <set>
 
-class AnimalFactory;
+class OrganismFactory;
 
 class World
 {
@@ -32,8 +32,8 @@ public:
 	bool isOrganismAtPosition(GridVector);
 	bool isPositionValid(GridVector);
 	std::weak_ptr<Organism> getFromMap(GridVector);
-	void saveWorldStateToFile(std::ofstream& file, AnimalFactory);
-	void loadWorldStateFromFile(std::ifstream & file, AnimalFactory);
+	void saveWorldStateToFile(std::ofstream& file, OrganismFactory);
+	void loadWorldStateFromFile(std::ifstream & file, OrganismFactory);
 protected:
 	void updateExecuteOrder();
 	void addToExecuteOrder(std::weak_ptr<Organism>);
@@ -48,12 +48,9 @@ protected:
 	\*-----------------------*/
 
 	/*
-	* For simulation we will be using lot of memory to reduce complexity of the game
-	* It might seem like waste of data, but the key is order of data.
-	* 
 	* In Organism vector we hold all active organisms
 	* In array map we hold key - position, and value - organism
-	* In list of queues, we define order of action execution
+	* In map of queues, we define order of action execution
 	*/
 
 	std::vector<std::weak_ptr<Organism>> organismsToActivate;

@@ -5,11 +5,6 @@ std::string Wolfberries::toString()
 	return std::string();
 }
 
-std::string Wolfberries::toJSON()
-{
-	return std::string();
-}
-
 void Wolfberries::collision(Organism& organism)
 {
 	if (dynamic_cast<Animal*>(&organism)) {

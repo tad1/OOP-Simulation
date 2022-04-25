@@ -8,18 +8,11 @@ public:
 		name = "Turtle";
 	};
 
-
 	// Odziedziczono za poœrednictwem elementu Animal
 	virtual std::string toString() override;
-
-	virtual std::string toJSON() override;
-
 	virtual void draw() override;
-
 	virtual Animal* clone() override;
-
 	virtual void action() override;
 	virtual void collision(Organism&) override;
-
 };
 

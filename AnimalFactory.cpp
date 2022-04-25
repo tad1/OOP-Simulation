@@ -1,6 +1,6 @@
 #include "AnimalFactory.h"
 
-int AnimalFactory::getOrganismType(Organism* organism)
+int OrganismFactory::getOrganismType(Organism* organism)
 {
 	if (dynamic_cast<Animal*>(organism)) {
 		return getAnimalType(dynamic_cast<Animal*>(organism));
@@ -11,7 +11,7 @@ int AnimalFactory::getOrganismType(Organism* organism)
 	return -1;
 }
 
-int AnimalFactory::getAnimalType(Animal* animal)
+int OrganismFactory::getAnimalType(Animal* animal)
 {
 	if (dynamic_cast<Antelope*>(animal)) {
 		return ANTELOPE;
@@ -29,12 +29,12 @@ int AnimalFactory::getAnimalType(Animal* animal)
 		return WOLF;
 	}
 	else if (dynamic_cast<Human*>(animal)) {
-		return ANIMAL_COUNT;
+		return ANIMAL_COUNT + PLANT_COUNT;
 	}
 	return -1;
 }
 
-int AnimalFactory::getPlantType(Plant* plant)
+int OrganismFactory::getPlantType(Plant* plant)
 {
 	if (dynamic_cast<Dandelion*>(plant)) {
 		return DANDELION;
@@ -55,7 +55,7 @@ int AnimalFactory::getPlantType(Plant* plant)
 }
 
 
-Organism* AnimalFactory::createOrganism(int id, GridVector pos)
+Organism* OrganismFactory::createOrganism(int id, GridVector pos)
 {
 	if (id < ANIMAL_COUNT) {
 		return createAnimal(id, pos);
@@ -69,7 +69,7 @@ Organism* AnimalFactory::createOrganism(int id, GridVector pos)
 	return nullptr;
 }
 
-Organism* AnimalFactory::createPlant(int plantId, GridVector pos)
+Organism* OrganismFactory::createPlant(int plantId, GridVector pos)
 {
 	Organism* organism;
 	switch (plantId)
@@ -82,6 +82,7 @@ Organism* AnimalFactory::createPlant(int plantId, GridVector pos)
 		break;
 	case GURANA:
 		organism = new Guarana(world, pos);
+		break;
 	case PINE_BORSCHT:
 		organism = new PineBorscht(world, pos);
 		break;
@@ -96,14 +97,7 @@ Organism* AnimalFactory::createPlant(int plantId, GridVector pos)
 	return organism;
 }
 
-Organism* AnimalFactory::createPlant(int plantId, GridVector pos, int strength, int initiative)
-{
-	Organism* organism = createPlant(plantId, pos);
-	organism->setParamters(strength, initiative);
-	return organism;
-}
-
-Organism* AnimalFactory::createAnimal(int AnimalId, GridVector pos)
+Organism* OrganismFactory::createAnimal(int AnimalId, GridVector pos)
 {
 	Organism* organism;
 	switch (AnimalId)
@@ -131,10 +125,4 @@ Organism* AnimalFactory::createAnimal(int AnimalId, GridVector pos)
 	return organism;
 }
 
-Organism* AnimalFactory::createAnimal(int AnimalId, GridVector pos, int strength, int initiative)
-{
-	Organism* organism = createAnimal(AnimalId, pos);
-	organism->setParamters(strength, initiative);
-	return organism;
-}
 

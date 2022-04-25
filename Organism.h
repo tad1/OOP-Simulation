@@ -2,12 +2,13 @@
 #include "Object.h"
 #include "Vector2D.h"
 #include "Random.h"
+#include "ISaveable.h"
 
 #include <iostream>
 
 class World;
 
-class Organism : public Object
+class Organism : public Object, public ISaveable
 {
 protected:
 	bool alive;
@@ -26,8 +27,6 @@ public:
 	void kill();
 	bool isAlive();
 
-	
-
 	// Defines bechaviour of organism during the round
 	virtual void action() = 0;
 	// Defines bechaviour during the contact/collision with different organism
@@ -35,10 +34,8 @@ public:
 	// Draw organism graphical representation
 	virtual void draw() = 0;
 	virtual Organism* clone() = 0;
-	virtual void writeToFile(std::ofstream&);
-	virtual void readFromFile(std::string& info);
+
 	virtual ~Organism() {
-		//printf("Destoyed %s\n", this->getName().c_str());
 	};
 	
 	void setParamters(int newStrength, int newInitiative) {
@@ -46,7 +43,6 @@ public:
 		initiative = newInitiative;
 	}
 	
-
 	int getInitiative() const{
 		return initiative;
 	}
@@ -59,5 +55,8 @@ public:
 		return position;
 	}
 
+	// Odziedziczono za poœrednictwem elementu ISaveable
+	virtual void writeToFile(std::ofstream&) override;
+	virtual void readFromFile(std::ifstream&) override;
 };
 

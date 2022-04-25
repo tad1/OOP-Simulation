@@ -5,14 +5,14 @@
 Plant::Plant(World& world, GridVector position) : Organism(world,position)
 {
 	name = "Plant";
-	spreadChance = 20;
+	spreadChance = 14;
 	
 }
 
 Plant::Plant(World& world, GridVector position, int strength) : Organism(world,position,0,strength)
 {
 	name = "Plant";
-	spreadChance = 20;
+	spreadChance = 14;
 }
 
 void Plant::action()

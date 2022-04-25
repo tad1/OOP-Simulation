@@ -1,4 +1,5 @@
 #include "Simulation.h"
+#include "Input.h"
 
 bool Simulation::readSaveInfo(std::vector<WorldMeta>& saveInfo)
 {
@@ -18,14 +19,12 @@ bool Simulation::readSaveInfo(std::vector<WorldMeta>& saveInfo)
 		std::stringstream lstream(line);
 
 		while (std::getline(lstream, value, ',')) {
-			std::cout << "Value: " << value << "\n";
 			switch (valueCounter)
 			{
 			case 0:
 				currentInfo.name = value;
 				break;
 			case 1:
-				//TODO: add check if value is number
 				currentInfo.seed = std::stoi(value);
 				saveInfo.push_back(currentInfo);
 				break;
@@ -33,7 +32,6 @@ bool Simulation::readSaveInfo(std::vector<WorldMeta>& saveInfo)
 				break;
 			}
 			valueCounter = (++valueCounter % 2);
-
 		}
 	}
 
@@ -42,7 +40,7 @@ bool Simulation::readSaveInfo(std::vector<WorldMeta>& saveInfo)
 	if (valueCounter != 0) {
 		printf("File 'saveinfo.meta' has been corrupted.\n");
 		saveInfo.clear();
-		return true;
+		return 1;
 	}
 	return 0;
 
@@ -52,7 +50,6 @@ void Simulation::writeSaveInfo(std::vector<WorldMeta>& saveInfo)
 {
 	std::ofstream file("data/saveinfo.meta", std::ios::out | std::ios::trunc);
 	if (!file.is_open()) return;
-	//TODO: make save working
 	
 	for (auto& info : saveInfo) {
 		file << info.name << "," << info.seed << std::endl;
@@ -63,17 +60,29 @@ void Simulation::writeSaveInfo(std::vector<WorldMeta>& saveInfo)
 void Simulation::readWorld(std::string path)
 {
 	std::ifstream file(path, std::ios::in);
-	if (!file.is_open()) return;
+	if (!file.is_open()) {
+		throw LoadExeption("couldn't open selected save file.");
+	};
 	unsigned int seed;
 	size_t count;
 	
 	file >> seed;
 	file >> count;
 
-	world.loadWorldStateFromFile(file, animalFactory);
+	Random::setSeed(seed);
+	for (int i = 0; i < count; i++) {
+		Random::randi();
+	}
+
+	try {
+		world.loadWorldStateFromFile(file, animalFactory);
+	}
+	catch (const LoadExeption& e) {
+		file.close();
+		throw;
+	}
 
 	file.close();
-
 }
 
 void Simulation::writeWorldSave()
@@ -84,9 +93,6 @@ void Simulation::writeWorldSave()
 
 	file << worldInfo.seed <<" " << Random::getCount() << std::endl;
 
-	//info about human
-
-	//then we make a long loop for saving organisms
 	world.saveWorldStateToFile(file, animalFactory);
 
 	file.close();
@@ -138,15 +144,24 @@ void Simulation::handleLoad()
 	printf("\n Select world:");
 	std::cin >> selectedWorld;
 
-	if (selectedWorld == saves.size()) {
+	if (selectedWorld == saves.size() || selectedWorld == 'q') {
 		currentState = GUIState::MAIN;
 	}
 	else if (selectedWorld >= 0 && selectedWorld < saves.size()) {
 		currentState = GUIState::PLAY;
-		readSimulation(saves[selectedWorld]);
+		try {
+			readSimulation(saves[selectedWorld]);
+		}
+		catch (const LoadExeption& e) {
+			printf("Load Falied: %s\n", e.what());
+			printf("Press any key to continue:");
+			Input::getKey();
+			currentState = GUIState::LOAD;
+		}
 	}
 	else {
 		printf("Selected invalid save!\n");
+		Input::getKey();
 	}
 }
 
@@ -155,12 +170,17 @@ void Simulation::handleNewGame()
 	int width, heigth;
 	std::string name;
 	unsigned int seed;
+
 	seed = Random::randi();
 	Random::setSeed(seed);
 	Random::randi();
 	seed = Random::randi();
+
 	std::getline(std::cin, name);
 
+	system("cls");
+	drawInfo();
+	printf("Starting new world\n\n");
 
 	printf("Type world name:");
 	std::getline(std::cin, worldInfo.name);
@@ -174,12 +194,14 @@ void Simulation::handleNewGame()
 	world.setSize(width, heigth);
 
 	std::string line;
+	
 	printf("\nType seed (default: %d): ", seed);
+
+	std::getline(std::cin, line);
 	std::getline(std::cin, line);
 	if (!line.empty()) {
 		std::stringstream(line) >> seed;
 	}
-	std::cin >> seed;
 	Random::setSeed(seed);
 	worldInfo.seed = seed;
 
@@ -192,16 +214,19 @@ void Simulation::handleNewGame()
 
 void Simulation::drawSelectSaved(std::vector<WorldMeta>& worldInfo)
 {
+	system("cls");
 	drawInfo();
 	if (worldInfo.size() == 0) {
 		printf("Couldn't find any save...\n");
 		return;
 	}
+	int no = 0;
 	
 	printf("|=================\n");
-	printf("|Id		Seed\n");
+	printf("| Your Saves\n");
 	for (auto& x : worldInfo) {
-		printf("|%s:	seed: %u\n", x.name.c_str(), x.seed);
+		printf("|%d) %s	seed: %u\n",no, x.name.c_str(), x.seed);
+		no++;
 	}
 	printf("|%zd: GO BACK\n", worldInfo.size());
 	printf("|=================\n");
@@ -229,7 +254,8 @@ void Simulation::showGUI()
 			handleNewGame();
 			break;
 		case PLAY:
-			printf("Welcome to the simulation");
+			system("cls");
+			printf("Welcome to the simulation\n");
 			play();
 			break;
 		}
@@ -242,20 +268,27 @@ void Simulation::showGUI()
 
 void Simulation::play()
 {
+	system("cls");
 	drawInfo();
-	char input;
+	world.updateWorld();
+	world.drawWorld();
+
+	
 	while (true) {
-		input = _getch();
+		Input::getKey();
 		system("cls");
 		drawInfo();
 
-		if (input == 'q') {
+		if (Input::isKeyPressed('q')) {
 			currentState = MAIN;
 			world.clear();
 			break;
 		}
-		if (input == 's') {
+		if (Input::isKeyPressed('s')) {
 			saveSimulation();
+			printf("Simulation Saved!\n");
+			world.drawWorld();
+			continue;
 		}
 
 		world.updateWorld();
@@ -278,8 +311,8 @@ void Simulation::generateWorld(int seed)
 		}
 	}
 
-	int animalCount = AnimalFactory::AnimalName::ANIMAL_COUNT;
-	int plantCount = AnimalFactory::PlantName::PLANT_COUNT;
+	int animalCount = OrganismFactory::AnimalName::ANIMAL_COUNT;
+	int plantCount = OrganismFactory::PlantName::PLANT_COUNT;
 	int maxOrganismCopies = (size.x * size.y) / (plantCount + animalCount);
 	maxOrganismCopies = (maxOrganismCopies > 2) ? maxOrganismCopies - 1 : maxOrganismCopies;
 	if (maxOrganismCopies > 4) {
@@ -294,32 +327,32 @@ void Simulation::generateWorld(int seed)
 		organismIDs.push_back(i);
 	}
 
-	//TODO: add human at the beginning
-	//And yeah the animals were before human, but i don't care
+	//we add human at the beginning
+	//And yeah animals were before human, but i don't care
+	{
+		auto it = freeSpots.begin() + Random::number(freeSpots.size());
+		Human* human = new Human(world, *it);
+		human->addSkill(HumanSkillFactory::HumanSkillName::ALZURE_SHIELD);
+		world.addOrganism(human);
+		freeSpots.erase(it);
+	}
 
 	printf("Generating world...");
-
-	std::random_shuffle(organismIDs.begin(), organismIDs.end());
 
 	int count;
 	int id;
 	for (int i = 0; i < animalCount + plantCount; i++) {
+
+
 		auto organismIt = organismIDs.begin() + Random::number(organismIDs.size());
 		id = *organismIt;
 
-		count = Random::number(maxOrganismCopies, 2);
+		count = Random::number(2, maxOrganismCopies);
 		for (int i = 0; i < count; i++) {
 			if (freeSpots.size() == 0) break;
 			auto it = freeSpots.begin() + Random::number(freeSpots.size());
 			
-			if (id >= animalCount) {
-				//adding a plant
-				world.addOrganism(animalFactory.createPlant(id - animalCount, *it));
-			}
-			else {
-				//adding an animal
-				world.addOrganism(animalFactory.createAnimal(id, *it));
-			}
+			world.addOrganism(animalFactory.createOrganism(id, *it));
 
 			freeSpots.erase(it);
 		}
@@ -361,8 +394,12 @@ void Simulation::saveSimulation()
 void Simulation::readSimulation(WorldMeta info)
 {
 	std::string path = "data/" + info.name + ".save";
-	Random::setSeed(info.seed);
 	worldInfo = info;
 
-	readWorld(path);
+	try {
+		readWorld(path);
+	}
+	catch (const LoadExeption& e) {
+		throw;
+	}
 }

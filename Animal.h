@@ -16,7 +16,6 @@ public:
     virtual Animal* clone() = 0;
 
     virtual void breed(Animal& other);
-
     void boostStrength(int);
     void stune();
     bool isStuned();

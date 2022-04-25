@@ -5,11 +5,6 @@ std::string Turtle::toString()
     return std::string();
 }
 
-std::string Turtle::toJSON()
-{
-    return std::string();
-}
-
 void Turtle::draw()
 {
     printf("t");

@@ -138,14 +138,6 @@ public:
         return "Vector2(" + std::to_string(this->x) + "," + std::to_string(this->y) + ")";
     }
 
-    std::string toJSON() {
-        std::string result = "{\n";
-        result += "\"x\": "+std::to_string(this->x);
-        result += "\n \"y\": "+std::to_string(this->y);
-        result += "\n}\n";
-        return result;
-    }
-
 };
 
 typedef Vector2T<float> Vector2;

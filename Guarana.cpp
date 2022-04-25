@@ -5,11 +5,6 @@ std::string Guarana::toString()
     return std::string();
 }
 
-std::string Guarana::toJSON()
-{
-    return std::string();
-}
-
 void Guarana::collision(Organism& other)
 {
     if (dynamic_cast<Animal*>(&other)) {

@@ -1,11 +1,6 @@
 #include "HumanSkill.h"
 #include "Human.h"
 
-void HumanSkill::moveAnimal(Organism& animal, GridVector newPosition)
-{
-	
-}
-
 bool HumanSkill::isActive()
 {
     return active;
@@ -35,19 +30,30 @@ void HumanSkill::updateStatus()
 			active = false;
 		}
 	}
-	cooldownDuration -= 1;
-	if (cooldownDuration <= 0) {
-		cooldownDuration = 0;
+	cooldownTime -= 1;
+	if (cooldownTime <= 0) {
+		cooldownTime = 0;
 	}
 }
 
 std::string HumanSkill::toString()
 {
-	return std::string();
+	return name + " is " + (active ? "active" : "disabled") + 
+		" cooldown in " + std::to_string(cooldownTime) + 
+		" is active for " + std::to_string(activeTime) + "\n";
 }
 
-std::string HumanSkill::toJSON()
+void HumanSkill::writeToFile(std::ofstream& file)
 {
-	return std::string();
+	file << " " << active << " ";
+	file << activeTime << " ";
+	file << cooldownTime;
+}
+
+void HumanSkill::readFromFile(std::ifstream& file)
+{
+	file >> active;
+	file >> activeTime;
+	file >> cooldownTime;
 }
 

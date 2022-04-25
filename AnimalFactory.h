@@ -3,7 +3,7 @@
 #include "Human.h"
 #include <vector>
 
-class AnimalFactory {
+class OrganismFactory {
 	std::vector<Organism*> organimsms;
 public:
 
@@ -23,7 +23,7 @@ public:
 		HUMAN, HUMAN_COUNT
 	};
 
-	AnimalFactory(World& wrld) : world(wrld) {
+	OrganismFactory(World& wrld) : world(wrld) {
 	}
 
 	int getOrganismType(Organism*);
@@ -32,8 +32,6 @@ public:
 
 	Organism* createOrganism(int id, GridVector pos);
 	Organism* createPlant(int plantId, GridVector pos);
-	Organism* createPlant(int plantId, GridVector pos, int strength, int initiative);
 	Organism* createAnimal(int AnimalId, GridVector pos);
-	Organism* createAnimal(int AnimalId, GridVector pos, int strength, int initiative);
 };
 

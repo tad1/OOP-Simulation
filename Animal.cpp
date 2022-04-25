@@ -27,6 +27,7 @@ void Animal::action()
     int selectedMove = Random::number(0, possibleDirections.size());
     GridVector newPos = possibleDirections[selectedMove];
    
+    //spliting logic into 2 polyphormic functions allow to not copy code above in custom animal implementations
     action(newPos);
     
 }
@@ -43,7 +44,9 @@ void Animal::action(GridVector newPos)
     }
 
     if (world.isOrganismAtPosition(newPos)) {
-        //collision
+        //animal want to move to occupied position
+        //we handle collision
+
         std::weak_ptr<Organism> wp = world.getFromMap(newPos);
         std::shared_ptr<Organism> sp = wp.lock();
         Organism& other = *sp.get();
@@ -66,7 +69,7 @@ void Animal::action(GridVector newPos)
                 }
             }
             else {
-                //Organism breeded
+                //it's the same class,and the breeding was called in collided animal.
                 return;
             }
         }
@@ -75,6 +78,7 @@ void Animal::action(GridVector newPos)
             return;
         }
 
+        //Stune effect is removed at the end of each turn
         if (isStuned()) {
             stuned = false;
             return;
@@ -111,7 +115,7 @@ void Animal::breed(Animal& other)
     
     Animal* child = clone();
 
-    //because private is in contetx of class, not object in c++, this is legal
+    //because private is in context of class, not object in c++, this is 100% legal
     child->setPosition(newPos);
     child->strength = (strength + other.strength) / 2;
     child->initiative = (initiative + other.initiative) / 2;

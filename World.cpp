@@ -1,5 +1,5 @@
 ﻿#include "World.h"
-#include "AnimalFactory.h"
+#include "OrganismFactory.h"
 #include <fstream>
 #include <sstream>
 
@@ -63,12 +63,14 @@ void World::drawWorld()
     GridVector currentPos(0, 0);
     std::weak_ptr<Organism> current;
 
+    //Using this bad looking idea to ensure that the border is correctly displayed on Windows OS.
+    // Note: on Linux, and Mac OS, we don't need this dirty trick
     //Defining Extended ASCII characters
-    //               ║            ╗                   ╝
-    unsigned char vertical = 186, upperRight = 187, bottomRight = 188;
+    //                        ║            ╗                   ╝
+    static unsigned char vertical = 186, upperRight = 187, bottomRight = 188;
 
-    //              ═                   ╔               ╚
-    unsigned char horizontal = 205, upperLeft = 201, bottomLeft = 200;
+    //                       ═                   ╔               ╚
+    static unsigned char horizontal = 205, upperLeft = 201, bottomLeft = 200;
     
 
     printf("%c",upperLeft);
@@ -126,7 +128,7 @@ void World::addOrganism(Organism* organism)
     organisms.push_back(sp);
     std::weak_ptr<Organism> wp = sp;
 
-    //if there is no organism at position, add it to map
+    //add it to map
     map[getIndexFromPosition(organism->getPosition())] = wp;
     
     //add to execute order    
@@ -200,6 +202,7 @@ void World::saveWorldStateToFile(std::ofstream& file, OrganismFactory factory)
     //write size
     file << mapSize.x << " " << mapSize.y << std::endl;
 
+    //write all organisms
     for (auto& x : executeQueue) {
         for (auto& y : x.second) {
             auto sp = y.lock();
@@ -213,7 +216,7 @@ void World::saveWorldStateToFile(std::ofstream& file, OrganismFactory factory)
     }
 }
 
-void World::loadWorldStateFromFile(std::ifstream & file, OrganismFactory animalFactory)
+void World::loadWorldStateFromFile(std::ifstream & file, OrganismFactory organismFactory)
 {
     GridVector newSize;
     //get size
@@ -233,12 +236,19 @@ void World::loadWorldStateFromFile(std::ifstream & file, OrganismFactory animalF
     std::streampos readPos = file.tellg();
 
     while (std::getline(file, line)) {
+        //we use getline to determine if it isn't an end of file
+        //we need to restore stream position.
+        file.seekg(readPos);
+
         file >> type;
         file >> pos.x;
         file >> pos.y;
 
-        organism = animalFactory.createOrganism(type, pos);
+        organism = organismFactory.createOrganism(type, pos);
+
+
         if (organism) {
+            //we restore file position to read correctly animal
             file.seekg(readPos);
             organism->readFromFile(file);
             addOrganism(organism);
@@ -247,8 +257,6 @@ void World::loadWorldStateFromFile(std::ifstream & file, OrganismFactory animalF
         readPos = file.tellg();
 
     }
-
-        
 }
 
 inline bool World::isPositionValid(GridVector pos)
@@ -263,10 +271,13 @@ void World::updateExecuteOrder()
     }
     organismsToActivate.clear();
     
+    //We use here an interesting solution for deleting elements, while iteration throught container.
     for (auto& x : executeQueue) {
         for (auto it = x.second.begin(); it != x.second.end();) {
             if (it->expired()) {
-                it = x.second.erase(it);
+                it = x.second.erase(it); //an erase function returns a next element.
+                //but when iterator is deleted without moving to the next element in this way,
+                //it result in unpredictable bechaviour.
             }
             else {
                 it++;
@@ -299,6 +310,5 @@ int World::getIndexFromPosition(GridVector pos) const
 
 void World::addExecutionQueueToMap(int key)
 {
-    //executeQueue.insert(std::pair<int,organismQueue>(key,organismQueue()));
     executeQueue.emplace(key, organismQueue());
 }

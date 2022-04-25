@@ -3,6 +3,9 @@
 
 class Human;
 
+//An universal recipe for skill.
+//Each skill in simulation have active and cooldown time.
+//As the names are self-explanatory, the worth mention idea is that cooldown-duration can be shorter than active-time
 class HumanSkill : public Object, public ISaveable
 {
 protected:

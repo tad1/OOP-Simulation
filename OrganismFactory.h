@@ -3,8 +3,9 @@
 #include "Human.h"
 #include <vector>
 
+//A facade and abstract factory that creates (or returns id) organism based on the given id.
+//Named "Factory" to simplify the name.
 class OrganismFactory {
-	std::vector<Organism*> organimsms;
 public:
 
 	World& world;

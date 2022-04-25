@@ -1,4 +1,4 @@
-#include "AnimalFactory.h"
+#include "OrganismFactory.h"
 
 int OrganismFactory::getOrganismType(Organism* organism)
 {

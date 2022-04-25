@@ -5,7 +5,8 @@ class Plant :
     public Organism
 {
 protected:
-    int spreadChance; //in %
+    //described in % of chance for success
+    int spreadChance;
 
 public:
 

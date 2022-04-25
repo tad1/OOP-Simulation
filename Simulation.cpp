@@ -12,9 +12,12 @@ bool Simulation::readSaveInfo(std::vector<WorldMeta>& saveInfo)
 	std::string line;
 	std::string value;
 
-	int counterMod = 2;
-	int valueCounter = 0;
+	int counterMod = 2; //specifies how many values file should contain
+	int valueCounter = 0; //a counter for mentioned values
 	WorldMeta currentInfo;
+
+	//this implementation could be much simpler
+	//but to add a little more challenge to project I decided to store information in csv format
 	while (std::getline(file, line)) {
 		std::stringstream lstream(line);
 
@@ -75,7 +78,7 @@ void Simulation::readWorld(std::string path)
 	}
 
 	try {
-		world.loadWorldStateFromFile(file, animalFactory);
+		world.loadWorldStateFromFile(file, organismFactory);
 	}
 	catch (const LoadExeption& e) {
 		file.close();
@@ -93,7 +96,7 @@ void Simulation::writeWorldSave()
 
 	file << worldInfo.seed <<" " << Random::getCount() << std::endl;
 
-	world.saveWorldStateToFile(file, animalFactory);
+	world.saveWorldStateToFile(file, organismFactory);
 
 	file.close();
 }
@@ -139,6 +142,7 @@ void Simulation::handleLoad()
 {
 	std::vector<WorldMeta> saves;
 	bool isCorrupted = readSaveInfo(saves);
+
 	drawSelectSaved(saves);
 	int selectedWorld;
 	printf("\n Select world:");
@@ -206,7 +210,7 @@ void Simulation::handleNewGame()
 	worldInfo.seed = seed;
 
 
-	generateWorld(seed);
+	generateWorld();
 
 	currentState = GUIState::PLAY;
 	
@@ -222,14 +226,14 @@ void Simulation::drawSelectSaved(std::vector<WorldMeta>& worldInfo)
 	}
 	int no = 0;
 	
-	printf("|=================\n");
+	printf("*=================\n");
 	printf("| Your Saves\n");
 	for (auto& x : worldInfo) {
 		printf("|%d) %s	seed: %u\n",no, x.name.c_str(), x.seed);
 		no++;
 	}
 	printf("|%zd: GO BACK\n", worldInfo.size());
-	printf("|=================\n");
+	printf("*=================\n");
 
 }
 
@@ -239,6 +243,7 @@ void Simulation::showGUI()
 	currentState = GUIState::MAIN;
 	char input;
 
+	//Using a state machine concept for menu.
 	while (currentState != EXIT) {
 		switch (currentState)
 		{
@@ -269,11 +274,13 @@ void Simulation::showGUI()
 void Simulation::play()
 {
 	system("cls");
+
 	drawInfo();
-	world.updateWorld();
+	//in first frame all animals are being added to game
+	world.updateExecuteOrder();
 	world.drawWorld();
 
-	
+	//after a that we can begin a simulation
 	while (true) {
 		Input::getKey();
 		system("cls");
@@ -296,7 +303,7 @@ void Simulation::play()
 	}
 }
 
-void Simulation::generateWorld(int seed)
+void Simulation::generateWorld()
 {
 
 	world.initialize();
@@ -328,7 +335,7 @@ void Simulation::generateWorld(int seed)
 	}
 
 	//we add human at the beginning
-	//And yeah animals were before human, but i don't care
+	//And yes animals were on Earth before human, but i don't care
 	{
 		auto it = freeSpots.begin() + Random::number(freeSpots.size());
 		Human* human = new Human(world, *it);
@@ -352,7 +359,7 @@ void Simulation::generateWorld(int seed)
 			if (freeSpots.size() == 0) break;
 			auto it = freeSpots.begin() + Random::number(freeSpots.size());
 			
-			world.addOrganism(animalFactory.createOrganism(id, *it));
+			world.addOrganism(organismFactory.createOrganism(id, *it));
 
 			freeSpots.erase(it);
 		}
@@ -368,7 +375,7 @@ void Simulation::saveSimulation()
 	//Open metafile
 	bool isCorrupted = readSaveInfo(saves);
 
-	//read all info, if there is already world with same name and seed, override
+	//read all info, if there is already world with same name, override it
 
 	bool overwrite = false;
 	for (auto& x : saves) {
@@ -382,13 +389,8 @@ void Simulation::saveSimulation()
 	}
 
 	writeSaveInfo(saves);
-
 	writeWorldSave();
 
-	//if file is corrupted, or it doesn't exists create new
-	//delete and save info file
-
-	//next create a new file with simulation
 }
 
 void Simulation::readSimulation(WorldMeta info)

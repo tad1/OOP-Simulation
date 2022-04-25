@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 
+//A class that wraps standard C way of generating pseudo-random-numbers. With few additionally functionalities.
 class Random {
 private:
 	size_t count;

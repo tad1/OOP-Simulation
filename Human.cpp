@@ -60,12 +60,16 @@ void Human::collision(Organism& other)
     if (!isStuned()) {
         Animal::collision(other);
     }
+    else {
+        stuned = false;
+    }
 }
 
 void Human::action()
 {
     handleInput();
 
+    //Prints info about all skills
     for (auto skill : skills) {
         skill->updateStatus();
         std::cout << skill->toString();

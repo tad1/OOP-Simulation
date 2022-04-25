@@ -90,7 +90,7 @@
     <ClCompile Include="Simulation.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="AnimalFactory.cpp">
+    <ClCompile Include="OrganismFactory.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="HumanSkillFactory.cpp">
@@ -161,7 +161,7 @@
     <ClInclude Include="IncludeAllOrganisms.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="AnimalFactory.h">
+    <ClInclude Include="OrganismFactory.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">

@@ -4,9 +4,8 @@
 
 class Human;
 
-/// <summary>
-/// A strategic based factory
-/// </summary>
+//A facade and abstract factory that creates (or returns id) organism based on the given id.
+//Named "Factory" to simplify the name.
 class HumanSkillFactory
 {
 	Human& client;
@@ -17,7 +16,6 @@ public:
 	};
 
 	HumanSkillFactory(Human& client) : client(client) {
-
 	}
 
 	int getSkillId(HumanSkill*);

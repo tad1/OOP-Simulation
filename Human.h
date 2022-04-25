@@ -12,17 +12,22 @@ class Human :
     public Animal
 {
 private:
+    //A friend keyword, allows us to remove definitions of skills in Human class and define it in a speparate file.
     friend class AlzureShieldSkill;
 
     void handleInput();
 
 protected:
     GridVector moveDirection;
+
+    //Instead of making hard typed skill in human class. I decided to create a composition based solution.
+    //By saying "composition base" I mean making a human class more universal, by adding a composition layer over inheritance.
     std::vector<HumanSkill*> skills;
     HumanSkillFactory skillFactory;
 
 public:
 
+    //A hard typed controlls, due the lack of proper input handler (for keyboard keys) for standard C++.
     static const struct CharacterControls {
         static const int UP_ARROW = 72;
         static const int DOWN_ARROW = 80;

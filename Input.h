@@ -2,6 +2,7 @@
 #include <conio.h>
 #include <iostream>
 
+//A singleton that wrap a conio.h style of input management.
 class Input
 {
 	int keyPressed;
@@ -32,6 +33,7 @@ private:
 
 
 public:
+	//A key function that makes all static functions, an singleton functions.
 	static Input& get() {
 		static Input instance;
 		return instance;

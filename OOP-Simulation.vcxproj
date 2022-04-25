@@ -141,7 +141,7 @@
   <ItemGroup>
     <ClCompile Include="AlzureShieldSkill.cpp" />
     <ClCompile Include="Animal.cpp" />
-    <ClCompile Include="AnimalFactory.cpp" />
+    <ClCompile Include="OrganismFactory.cpp" />
     <ClCompile Include="Antelope.cpp" />
     <ClCompile Include="Dandelion.cpp" />
     <ClCompile Include="Fox.cpp" />
@@ -165,7 +165,7 @@
   <ItemGroup>
     <ClInclude Include="AlzureShieldSkill.h" />
     <ClInclude Include="Animal.h" />
-    <ClInclude Include="AnimalFactory.h" />
+    <ClInclude Include="OrganismFactory.h" />
     <ClInclude Include="Antelope.h" />
     <ClInclude Include="Dandelion.h" />
     <ClInclude Include="Fox.h" />

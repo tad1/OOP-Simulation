@@ -103,7 +103,7 @@ void Simulation::writeWorldSave()
 
 void Simulation::drawInfo()
 {
-	printf("Virtual World by Tadeusz Brzeski 191343\n");
+	printf("Virtual World by tad1\n");
 	if(currentState == PLAY)
 		printf("World name: %s     Seed: %d\n", worldInfo.name.c_str(), worldInfo.seed);
 }
